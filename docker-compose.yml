@@ -1,0 +1,69 @@
+services:
+    nginx:
+        build:
+            context: ./
+            dockerfile: docker/nginx.docker
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/confs/:/etc/nginx/conf.d
+            - ./docker/logs/nginx:/var/log/nginx
+            - ./docker/nginx/ssl:/etc/nginx/ssl
+        ports:
+            - "8080:443"
+        links:
+            - php-fpm
+            - mysql
+
+    php-fpm:
+        build:
+            context: ./
+            dockerfile: docker/php-fpm.docker
+        volumes:
+            - ./:/var/www
+            - ./docker/logs/php-fpm:/var/log/fpm-php.www.log
+
+    php-cli:
+        build:
+            context: ./
+            dockerfile: docker/php-cli.docker
+            args:
+                WWWUSER: ${USER}
+        volumes:
+            - ./:/var/www
+        links:
+            - mysql
+            - redis
+        tty: true
+        user: ${USER}
+        environment:
+            - "DB_PORT=3306"
+            - "DB_HOST=mysql"
+            - "REDIS_PORT=6379"
+            - "REDIS_HOST=redis"
+
+    mysql:
+        image: mysql:8.0
+        volumes:
+            - ./storage/docker/mysql:/var/lib/mysql
+        environment:
+            - "MYSQL_ROOT_PASSWORD=root"
+            - "MYSQL_USER=app"
+            - "MYSQL_PASSWORD=root"
+            - "MYSQL_DATABASE=homestead"
+        ports:
+            - "33061:3306"
+
+    redis:
+        image: redis:8.0
+        ports:
+            - "63791:6379"
+
+    node:
+        build:
+            context: ./
+            dockerfile: docker/node.docker
+        volumes:
+            - ./:/var/www
+        ports:
+            - "5173:5173"
+        tty: true
