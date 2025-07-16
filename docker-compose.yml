@@ -18,9 +18,12 @@ services:
         build:
             context: ./
             dockerfile: docker/php-fpm.docker
+            args:
+                WWWUSER: ${USER}
         volumes:
             - ./:/var/www
             - ./docker/logs/php-fpm:/var/log/fpm-php.www.log
+        user: ${USER}
 
     php-cli:
         build:
