@@ -16,6 +16,9 @@
 
         <!-- Styles -->
         @livewireStyles
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body class="font-sans antialiased">
         <x-banner />
@@ -34,6 +37,7 @@
 
             <!-- Page Content -->
             <main>
+                @include('layouts.partials.flash')
                 {{ $slot }}
             </main>
         </div>
@@ -41,5 +45,8 @@
         @stack('modals')
 
         @livewireScripts
+
+        <!-- Bootstrap JS Bundle (с Popper) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
