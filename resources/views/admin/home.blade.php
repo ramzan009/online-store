@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('content')
+    <div class="block-admin">
         @include ('admin._nav', ['page' => ''])
-    @endsection
+    </div>
 </x-app-layout>

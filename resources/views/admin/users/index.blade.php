@@ -1,8 +1,6 @@
 <x-app-layout>
 
-@section('content')
-
-    <p><a href="{{ route('admin.users.create') }}" class="btn btn-success">Add User</a></p>
+    <div class="create-view-users-block">
 
     <div class="card mb-3">
         <div class="card-header">Filter</div>
@@ -32,9 +30,9 @@
                             <label for="status" class="col-form-label">Status</label>
                             <select id="status" class="form-control" name="status">
                                 <option value=""></option>
-                                @foreach ($statuses as $value => $label)
-                                    <option value="{{ $value }}"{{ $value === request('status') ? ' selected' : '' }}>{{ $label }}</option>
-                                @endforeach;
+{{--                                @foreach ($statuses as $value => $label)--}}
+{{--                                    <option value="{{ $value }}"{{ $value === request('status') ? ' selected' : '' }}>{{ $label }}</option>--}}
+{{--                                @endforeach;--}}
                             </select>
                         </div>
                     </div>
@@ -43,23 +41,22 @@
                             <label for="role" class="col-form-label">Role</label>
                             <select id="role" class="form-control" name="role">
                                 <option value=""></option>
-                                @foreach ($roles as $value => $label)
-                                    <option value="{{ $value }}"{{ $value === request('role') ? ' selected' : '' }}>{{ $label }}</option>
-                                @endforeach;
+{{--                                @foreach ($roles as $value => $label)--}}
+{{--                                    <option value="{{ $value }}"{{ $value === request('role') ? ' selected' : '' }}>{{ $label }}</option>--}}
+{{--                                @endforeach;--}}
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="col-form-label">&nbsp;</label><br />
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <button type="submit" class="btn btn-primary">Поиск</button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
@@ -67,7 +64,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
-            <th>Role</th>
+{{--            <th>Role</th>--}}
         </tr>
         </thead>
         <tbody>
@@ -78,20 +75,28 @@
                 <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    @if ($user->isWait())
-                        <span class="badge badge-secondary">Waiting</span>
+                    @if($user->status === \App\Models\User::STATUS_WAIT)
+                        <span style="color: #1f2937;" class="badge badge-secondary">Waiting</span>
                     @endif
-                    @if ($user->isActive())
-                        <span class="badge badge-primary">Active</span>
-                    @endif
-                </td>
-                <td>
-                    @if ($user->isAdmin())
-                        <span class="badge badge-danger">Admin</span>
-                    @else
-                        <span class="badge badge-secondary">User</span>
+                    @if($user->status === \App\Models\User::STATUS_ACTIVE)
+                         <span style="color: #1f2937;" class="badge badge-primary">Active</span>
                     @endif
                 </td>
+{{--                <td>--}}
+{{--                    @if ($user->isWait())--}}
+{{--                        <span class="badge badge-secondary">Waiting</span>--}}
+{{--                    @endif--}}
+{{--                    @if ($user->isActive())--}}
+{{--                        <span class="badge badge-primary">Active</span>--}}
+{{--                    @endif--}}
+{{--                </td>--}}
+{{--                <td>--}}
+{{--                    @if ($user->isAdmin())--}}
+{{--                        <span class="badge badge-danger">Admin</span>--}}
+{{--                    @else--}}
+{{--                        <span class="badge badge-secondary">User</span>--}}
+{{--                    @endif--}}
+{{--                </td>--}}
             </tr>
         @endforeach
 
@@ -99,6 +104,7 @@
     </table>
 
     {{ $users->links() }}
-@endsection
+        <p><a href="{{ route('admin.users.create') }}" class="btn btn-success">Добавить пользователя</a></p>
+    </div>
 
 </x-app-layout>

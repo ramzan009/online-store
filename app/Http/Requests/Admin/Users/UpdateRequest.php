@@ -4,7 +4,8 @@ namespace App\Http\Requests\Admin\Users;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Livewire\Attributes\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -21,7 +22,7 @@ class UpdateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(User $user): array
+    public function rules(): array
     {
         return [
             'name' => [
@@ -33,7 +34,10 @@ class UpdateRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
-                Rule::unique(User::class)->ignore($this->user->id),
+                Rule::unique(User::class, 'email')
+                    ->where(function ($query) {
+                        $query->where('id', '!=', Auth::user()->id);
+                    })
             ],
             'status' => [
                 'required',
