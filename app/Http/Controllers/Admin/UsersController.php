@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Users\CreateRequest;
 use App\Http\Requests\Admin\Users\UpdateRequest;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
@@ -34,9 +35,10 @@ class UsersController extends Controller
         $data = $request->validated();
 
         $user = User::query()->create([
-            'name'   => $data->name,
-            'email'  => $data->email,
-            'status' => User::STATUS_ACTIVE,
+            'name'     => $data['name'],
+            'email'    => $data['email'],
+            'password' => bcrypt(Str::random()),
+            'status'   => User::STATUS_ACTIVE,
         ]);
 
         return redirect()->route('admin.users.show', $user->id);
@@ -65,12 +67,11 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, User $user)
     {
         $data = $request->validated();
-        $user = User::query()->create($data);
-
-        return redirect()->route('admin.users.show', $user->id);
+        $user->update($data);
+        return redirect()->route('admin.users.show', $user);
     }
 
     /**
@@ -81,5 +82,5 @@ class UsersController extends Controller
         $user->delete();
         return redirect()->route('admin.users.index');
     }
-    
+
 }
