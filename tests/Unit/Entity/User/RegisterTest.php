@@ -28,15 +28,16 @@ class RegisterTest extends TestCase
 
         self::assertTrue($user->isWait());
         self::assertTrue($user->isActive());
+        self::assertFalse($user->isAdmin());
     }
 
-//    public function testAlreadyVerified()
-//    {
-//        $user = User::register('name', 'email', 'password');
-//
-//        $user->verify();
-//
-//        $this->expectExceptionMessage('User already verified.');
-//        $user->verify();
-//    }
+    public function testAlreadyVerified()
+    {
+        $user = User::register('name', 'email', 'password');
+
+        $user->verify();
+
+        $this->expectExceptionMessage('User already verified.');
+        $user->verify();
+    }
 }

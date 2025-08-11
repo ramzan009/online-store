@@ -21,7 +21,7 @@ assets-watch:
 
 perm:
 	sudo chown -R ${USER}:${USER} bootstrap/cache
-	sudo chmod -R 777 ./storage/framework
+	sudo chmod -R 777 ./storage/framewor
 	sudo chmod -R 777 ./storage/logs
 	if [ -d "node_modules" ]; then sudo chown ${USER}:${USER} node_modules -R; fi
 	if [ -d "public/build" ]; then sudo chown ${USER}:${USER} public/build -R; fi

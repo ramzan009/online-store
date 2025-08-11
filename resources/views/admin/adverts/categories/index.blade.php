@@ -1,0 +1,50 @@
+<x-app-layout>
+
+    <div class="create-view-users-block">
+        @include('admin.adverts.categories._nav')
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach ($categories as $category)
+                <tr>
+                    <td>
+                        @for ($i = 0; $i < $category->depth; $i++) &mdash; @endfor
+                        <a href="{{ route('admin.adverts.categories.show', $category) }}">{{ $category->name }}</a>
+                    </td>
+                    <td>{{ $category->slug }}</td>
+                    <td>
+                        <div class="d-flex flex-row">
+                            <form method="POST" action="{{ route('admin.adverts.categories.first', $category) }}" class="mr-1">
+                                @csrf
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-double-up"></span>First</button>
+                            </form>
+                            <form method="POST" action="{{ route('admin.adverts.categories.up', $category) }}" class="mr-1">
+                                @csrf
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-up"></span>Up</button>
+                            </form>
+                            <form method="POST" action="{{ route('admin.adverts.categories.down', $category) }}" class="mr-1">
+                                @csrf
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-down"></span>Down</button>
+                            </form>
+                            <form method="POST" action="{{ route('admin.adverts.categories.last', $category) }}" class="mr-1">
+                                @csrf
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-double-down"></span>Last</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+
+            </tbody>
+        </table>
+        <p><a href="{{ route('admin.adverts.categories.create') }}" class="btn btn-success">Добавить категория</a></p>
+    </div>
+
+</x-app-layout>

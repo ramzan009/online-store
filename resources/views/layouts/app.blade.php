@@ -38,6 +38,8 @@
             <!-- Page Content -->
             <main>
                 @include('layouts.partials.flash')
+{{--                @section('breadcrumbs', Breadcrumbs::render())--}}
+{{--                @yield('breadcrumbs')--}}
                 {{ $slot }}
             </main>
         </div>

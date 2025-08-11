@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Users\CreateRequest;
 use App\Http\Requests\Admin\Users\UpdateRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class UsersController extends Controller
@@ -13,10 +14,43 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::query()->orderBy('id', 'desc')->paginate(20);
-        return view('admin.users.index', compact('users'));
+        $query = User::query()->orderByDesc('id');
+
+        if (!empty($value = $request->get('id'))) {
+            $query->where('id', $value);
+        }
+
+        if (!empty($value = $request->get('name'))) {
+            $query->where('name', 'like', '%' . $value . '%');
+        }
+
+        if (!empty($value = $request->get('email'))) {
+            $query->where('email', 'like', '%' . $value . '%');
+        }
+
+        if (!empty($value = $request->get('status'))) {
+            $query->where('status', $value);
+        }
+
+        if (!empty($value = $request->get('role'))) {
+            $query->where('role', $value);
+        }
+
+        $users = $query->paginate(20);
+
+        $statuses = [
+            User::STATUS_WAIT   => 'Waiting',
+            User::STATUS_ACTIVE => 'Active',
+        ];
+
+        $roles = [
+            User::ROLE_ADMIN => 'Admin',
+            User::ROLE_USER  => 'User',
+        ];
+
+        return view('admin.users.index', compact('users', 'statuses', 'roles'));
     }
 
     /**
@@ -38,6 +72,7 @@ class UsersController extends Controller
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => bcrypt(Str::random()),
+            'role'     => User::ROLE_USER,
             'status'   => User::STATUS_ACTIVE,
         ]);
 
@@ -61,7 +96,12 @@ class UsersController extends Controller
             User::STATUS_WAIT   => 'Waiting',
             User::STATUS_ACTIVE => 'Active',
         ];
-        return view('admin.users.edit', compact('user', 'statuses'));
+
+        $roles = [
+            User::ROLE_ADMIN => 'Admin',
+            User::ROLE_USER  => 'User',
+        ];
+        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
     }
 
     /**
