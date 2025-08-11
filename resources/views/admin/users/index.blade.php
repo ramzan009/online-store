@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <div class="create-view-users-block">
-
+        @include('admin.adverts.categories._nav')
     <div class="card mb-3">
         <div class="card-header">Filter</div>
         <div class="card-body">
@@ -30,9 +30,9 @@
                             <label for="status" class="col-form-label">Status</label>
                             <select id="status" class="form-control" name="status">
                                 <option value=""></option>
-{{--                                @foreach ($statuses as $value => $label)--}}
-{{--                                    <option value="{{ $value }}"{{ $value === request('status') ? ' selected' : '' }}>{{ $label }}</option>--}}
-{{--                                @endforeach;--}}
+                                @foreach ($statuses as $value => $label)
+                                    <option value="{{ $value }}"{{ $value === request('status') ? ' selected' : '' }}>{{ $label }}</option>
+                                @endforeach;
                             </select>
                         </div>
                     </div>
@@ -41,9 +41,9 @@
                             <label for="role" class="col-form-label">Role</label>
                             <select id="role" class="form-control" name="role">
                                 <option value=""></option>
-{{--                                @foreach ($roles as $value => $label)--}}
-{{--                                    <option value="{{ $value }}"{{ $value === request('role') ? ' selected' : '' }}>{{ $label }}</option>--}}
-{{--                                @endforeach;--}}
+                                @foreach ($roles as $value => $label)
+                                    <option value="{{ $value }}"{{ $value === request('role') ? ' selected' : '' }}>{{ $label }}</option>
+                                @endforeach;
                             </select>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
-{{--            <th>Role</th>--}}
+            <th>Role</th>
         </tr>
         </thead>
         <tbody>
@@ -90,13 +90,15 @@
 {{--                        <span class="badge badge-primary">Active</span>--}}
 {{--                    @endif--}}
 {{--                </td>--}}
-{{--                <td>--}}
-{{--                    @if ($user->isAdmin())--}}
-{{--                        <span class="badge badge-danger">Admin</span>--}}
-{{--                    @else--}}
-{{--                        <span class="badge badge-secondary">User</span>--}}
-{{--                    @endif--}}
-{{--                </td>--}}
+                <td>
+                    @if ($user->isAdmin())
+                        <span style="color: #1a1d20" class="badge badge-danger">Admin</span>
+                    @elseif($user->isUser())
+                        <span style="color: #1a1d20" class="badge badge-secondary">User</span>
+                    @else
+                        -
+                    @endif
+                </td>
             </tr>
         @endforeach
 

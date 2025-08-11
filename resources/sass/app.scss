@@ -2,30 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .create-view-users-block {
     width: 1300px;
-    margin: 1% auto;
+    margin: 0 auto;
     padding: 25px 20px 20px 20px;
 }
 
 .create-users-block {
     width: 1300px;
-    margin: 2% auto;
+    margin: 1% auto;
     background-color: #ffffff;
     padding: 25px 20px 20px 20px;
 }
 
 .about-users-block {
     width: 1300px;
-    margin: 2% auto;
+    margin: 1% auto;
     background-color: #ffffff;
     padding: 25px 20px 20px 20px;
 }
 
 .show-users-block {
     width: 1300px;
-    margin: 2% auto;
+    margin: 1% auto;
     background-color: #ffffff;
     padding: 25px 20px 20px 20px;
 }
@@ -37,4 +36,9 @@
 .block-admin {
     width: 1300px;
     margin: 1% auto;
+}
+
+.create-for-style {
+    margin: 20px auto;
+    width: 1300px;
 }
