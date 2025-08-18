@@ -31,7 +31,7 @@ class Category extends Model
     }
 
     /**
-     * @return array
+     * @return Attribute[]
      */
     public function allAttributes(): array
     {

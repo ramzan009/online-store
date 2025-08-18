@@ -39,10 +39,10 @@ class UpdateRequest extends FormRequest
                         $query->where('id', '!=', Auth::user()->id);
                     })
             ],
-            'status' => [
+            'role' => [
                 'required',
                 'string',
-                Rule::in([User::STATUS_ACTIVE, User::STATUS_WAIT]),
+                Rule::in(array_keys(User::rolesList())),
             ]
         ];
     }

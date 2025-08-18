@@ -3,21 +3,16 @@
 namespace App\Http\Controllers\Cabinet\Adverts;
 
 use App\Http\Controllers\Controller;
+use App\Models\Adverts\Advert\Advert;
+use Illuminate\Support\Facades\Auth;
 
 class AdvertController extends Controller
 {
     public function index()
     {
+        $adverts = Advert::forUser(Auth::user())->orderByDesc('id')->paginate(20);
+
         return view('cabinet.adverts.index');
     }
 
-    public function create()
-    {
-        return view('cabinet.adverts.create');
-    }
-
-    public function edit()
-    {
-        return view('cabinet.adverts.edit');
-    }
 }
