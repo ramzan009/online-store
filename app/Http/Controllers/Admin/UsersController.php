@@ -41,13 +41,13 @@ class UsersController extends Controller
         $users = $query->paginate(20);
 
         $statuses = [
-            User::STATUS_WAIT   => 'Waiting',
+            User::STATUS_WAIT => 'Waiting',
             User::STATUS_ACTIVE => 'Active',
         ];
 
         $roles = [
             User::ROLE_ADMIN => 'Admin',
-            User::ROLE_USER  => 'User',
+            User::ROLE_USER => 'User',
         ];
 
         return view('admin.users.index', compact('users', 'statuses', 'roles'));
@@ -68,15 +68,11 @@ class UsersController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::query()->create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'password' => bcrypt(Str::random()),
-            'role'     => User::ROLE_USER,
-            'status'   => User::STATUS_ACTIVE,
-        ]);
-
-        return redirect()->route('admin.users.show', $user->id);
+        $user = User::new(
+            $data['name'],
+            $data['email'],
+        );
+        return redirect()->route('admin.users.show', $user);
     }
 
     /**
@@ -92,16 +88,9 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        $statuses = [
-            User::STATUS_WAIT   => 'Waiting',
-            User::STATUS_ACTIVE => 'Active',
-        ];
+        $roles = User::rolesList();
 
-        $roles = [
-            User::ROLE_ADMIN => 'Admin',
-            User::ROLE_USER  => 'User',
-        ];
-        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -110,7 +99,15 @@ class UsersController extends Controller
     public function update(UpdateRequest $request, User $user)
     {
         $data = $request->validated();
-        $user->update($data);
+        $user->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+        ]);
+
+        if (isset($data['role']) && $data['role'] !== $user->role) {
+            $user->changeRole($data['role']);
+        }
+
         return redirect()->route('admin.users.show', $user);
     }
 

@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Random\RandomException;
+use function Symfony\Component\String\s;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -19,8 +21,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
+    public const ROLE_MODERATOR = 'moderator';
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
@@ -82,6 +86,43 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * @param string $name
+     * @param string $email
+     * @param string $password
+     * @return self
+     */
+    public static function register(string $name, string $email, string $password): self
+    {
+        return static::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => bcrypt($password),
+            'status' => self::STATUS_WAIT,
+            'role' => self::ROLE_USER,
+            'verify_token' => Str::uuid(),
+        ]);
+    }
+
+    public static function new( $name, $email): self
+    {
+        return static::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => bcrypt(Str::random()),
+            'role' => self::ROLE_USER,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    public static function rolesList(): array
+    {
+        return [
+            self::ROLE_USER => 'User',
+            self::ROLE_ADMIN => 'Admin',
+            self::ROLE_MODERATOR => 'Moderator',
+        ];
+    }
+    /**
      * @return bool
      */
     public function isWait(): bool
@@ -101,13 +142,13 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param string $role
      * @return void
      */
-    public function changeRole(string $role): void
+    public function changeRole($role): void
     {
-        if (!in_array($role, [self::ROLE_USER, self::ROLE_ADMIN], true)) {
+        if (!array_key_exists($role, self::rolesList())) {
             throw new \InvalidArgumentException('Undefined role "' . $role . '"');
         }
         if ($this->role === $role) {
-            throw new \DomainException('Role is already assigned');
+            throw new \DomainException('Role is already assigned.');
         }
         $this->update(['role' => $role]);
     }
@@ -118,6 +159,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isModerator(): bool
+    {
+        return  $this->role === self::ROLE_MODERATOR;
     }
 
     /**

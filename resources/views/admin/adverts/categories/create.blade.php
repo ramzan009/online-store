@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="create-for-style">allAttributes
+    <div class="create-for-style">
         @include('admin.adverts.categories._nav')
     </div>
     <div class="create-users-block">

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,14 @@ class Region extends Model
     ];
 
     /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return ($this->parent ? $this->parent->getAddress() . ', ' : '') . $this->name;
+    }
+
+    /**
      * @return BelongsTo
      */
     public function parent(): BelongsTo
@@ -32,5 +41,14 @@ class Region extends Model
     public function children(): HasMany
     {
         return $this->hasMany(static::class, 'parent_id', 'id');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeRoots(Builder $query): Builder
+    {
+        return $query->whereNull('parent_id');
     }
 }

@@ -129,6 +129,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('adverts.categories.index');
+        return redirect()->route('admin.adverts.categories.index');
     }
 }
