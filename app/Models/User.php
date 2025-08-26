@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Adverts\Advert\Advert;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -142,7 +144,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param string $role
      * @return void
      */
-    public function changeRole($role): void
+    public function changeRole(string $role): void
     {
         if (!array_key_exists($role, self::rolesList())) {
             throw new \InvalidArgumentException('Undefined role "' . $role . '"');
@@ -153,9 +155,6 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->update(['role' => $role]);
     }
 
-    /**
-     * @return bool
-     */
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;
@@ -166,12 +165,27 @@ class User extends Authenticatable implements MustVerifyEmail
         return  $this->role === self::ROLE_MODERATOR;
     }
 
-    /**
-     * @return bool
-     */
     public function isUser(): bool
     {
         return $this->role === self::ROLE_USER;
+    }
+
+    public function addToFavorites($id): void
+    {
+        if ($this->hasInFavorites($id)) {
+            throw new \DomainException('Already added to favorites.');
+        }
+        $this->favorites()->attach($id);
+    }
+
+    public function removeFromFavorites($id): void
+    {
+        $this->favorites()->detach($id);
+    }
+
+    public function hasInFavorites($id): bool
+    {
+        return $this->favorites()->where('id', $id)->exists();
     }
 
     public function isPhoneVerified(): bool
@@ -241,5 +255,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasFilledProfile(): bool
     {
         return !empty($this->name) && !empty($this->last_name) && $this->isPhoneVerified();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(Advert::class, 'advert_favorites', 'user_id', 'advert_id');
     }
 }

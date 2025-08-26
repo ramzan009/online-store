@@ -15,12 +15,12 @@ class HomeController extends Controller
      *
      * @return Factory|View|Application|object
      */
-    public function index()
+    public function index(Category $category)
     {
         $regions = Region::roots()->orderBy('name')->getModels();
 
         $categories = Category::whereIsRoot()->defaultOrder()->getModels();
 
-        return view('home', compact('regions', 'categories'));
+        return view('home', compact('regions', 'categories', 'category'));
     }
 }

@@ -116,9 +116,11 @@
                                     {{ __('Profile') }}
                                 </x-dropdown-link>
 
-                                <x-dropdown-link href="{{ route('admin.home') }}">
-                                    {{ __('Admin') }}
-                                </x-dropdown-link>
+                                @can('admin-button')
+                                    <x-dropdown-link href="{{ route('admin.home') }}">
+                                        {{ __('Admin') }}
+                                    </x-dropdown-link>
+                                @endcan
 
                                 <x-dropdown-link href="{{ route('cabinet.home') }}">
                                     {{ __('Cabinet') }}

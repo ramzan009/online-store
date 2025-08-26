@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -170,6 +171,11 @@ class Advert extends Model
         return $this->hasMany(Value::class, 'advert_id', 'id');
     }
 
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'advert_favorites', 'advert_id', 'user_id');
+    }
+
     public function scopeActive(Builder $query)
     {
         return $query->where('status', self::STATUS_ACTIVE);
@@ -195,5 +201,12 @@ class Advert extends Model
             $ids = array_merge($ids, $childrenIds);
         }
         return $query->whereIn('region_id', $ids);
+    }
+
+    public function scopeFavoredByUser(Builder $query, User $user)
+    {
+        return $query->whereHas('favorites', function ($query) use ($user) {
+           $query->where('user_id', $user->id);
+        });
     }
 }

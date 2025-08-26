@@ -29,15 +29,12 @@ class UpdateRequest extends FormRequest
               'required',
               'string',
               'max:255',
-              'unique:' . User::class,
             ],
             'email' => [
                 'required',
                 'email',
                 Rule::unique(User::class, 'email')
-                    ->where(function ($query) {
-                        $query->where('id', '!=', Auth::user()->id);
-                    })
+                    ->ignore($this->route('user')->id)
             ],
             'role' => [
                 'required',

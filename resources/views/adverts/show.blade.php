@@ -16,16 +16,16 @@
             <a href="{{ route('admin.adverts.adverts.edit', $advert) }}" class="btn btn-primary mr-1">Edit</a>
             <a href="{{ route('admin.adverts.adverts.photos', $advert) }}" class="btn btn-primary mr-1">Photos</a>
 
-            @if ($advert->isOnModeration())
-                <form method="POST" action="{{ route('admin.adverts.adverts.moderate', $advert) }}" class="mr-1">
-                    @csrf
-                    <button class="btn btn-success">Moderate</button>
-                </form>
-            @endif
+{{--            @if ($advert->isOnModeration())--}}
+{{--                <form method="POST" action="{{ route('admin.adverts.adverts.moderate', $advert) }}" class="mr-1">--}}
+{{--                    @csrf--}}
+{{--                    <button class="btn btn-success">Moderate</button>--}}
+{{--                </form>--}}
+{{--            @endif--}}
 
-            @if ($advert->isOnModeration() || $advert->isActive())
-                <a href="{{ route('admin.adverts.adverts.reject', $advert) }}" class="btn btn-danger mr-1">Reject</a>
-            @endif
+{{--            @if ($advert->isOnModeration() || $advert->isActive())--}}
+{{--                <a href="{{ route('admin.adverts.adverts.reject', $advert) }}" class="btn btn-danger mr-1">Reject</a>--}}
+{{--            @endif--}}
 
             <form method="POST" action="{{ route('admin.adverts.adverts.destroy', $advert) }}" class="mr-1">
                 @csrf

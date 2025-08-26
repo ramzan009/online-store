@@ -35,20 +35,33 @@
             <tr>
                 <th>Status</th>
                 <td>
-                    @if($user->status === \App\Models\User::STATUS_WAIT)
+                    {{--                    @if($user->status === \App\Models\User::STATUS_WAIT)--}}
+                    {{--                        <span style="color: #1f2937;" class="badge badge-secondary">Waiting</span>--}}
+                    {{--                    @endif--}}
+                    {{--                    @if($user->status === \App\Models\User::STATUS_ACTIVE)--}}
+                    {{--                        <span style="color: #1f2937;" class="badge badge-primary">Active</span>--}}
+                    {{--                    @endif--}}
+
+                    @if ($user->isWait())
                         <span style="color: #1f2937;" class="badge badge-secondary">Waiting</span>
                     @endif
-                    @if($user->status === \App\Models\User::STATUS_ACTIVE)
+                    @if ($user->isActive())
                         <span style="color: #1f2937;" class="badge badge-primary">Active</span>
                     @endif
-
-{{--                    @if ($user->isWait())--}}
-{{--                        <span class="badge badge-secondary">Waiting</span>--}}
-{{--                    @endif--}}
-{{--                    @if ($user->isActive())--}}
-{{--                        <span class="badge badge-primary">Active</span>--}}
-{{--                    @endif--}}
                 </td>
+            </tr>
+            <tr>
+                <th>Role</th>
+                <td>
+                    @if ($user->isAdmin())
+                        <span style="color: #1f2937;" class="badge badge-danger">Admin</span>
+                    @endif
+                    @if($user->isUser())
+                        <span style="color: #1f2937;" class="badge badge-secondary">User</span>
+                    @endif
+                    @if($user->isModerator())
+                        <span style="color: #1f2937;" class="badge badge-secondary">Moderator</span>
+                    @endif
             </tr>
             <tbody>
             </tbody>
