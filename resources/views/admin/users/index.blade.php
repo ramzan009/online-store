@@ -1,7 +1,7 @@
 <x-app-layout>
 
     <div class="create-view-users-block">
-        @include('admin.adverts.categories._nav')
+        @include('admin.users._nav')
     <div class="card mb-3">
         <div class="card-header">Filter</div>
         <div class="card-body">
@@ -95,6 +95,8 @@
                         <span style="color: #1a1d20" class="badge badge-danger">Admin</span>
                     @elseif($user->isUser())
                         <span style="color: #1a1d20" class="badge badge-secondary">User</span>
+                    @elseif($user->isModerator())
+                        <span style="color: #1a1d20" class="badge badge-secondary">Moderator</span>
                     @else
                         -
                     @endif

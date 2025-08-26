@@ -12,7 +12,7 @@ class AdvertController extends Controller
     {
         $adverts = Advert::forUser(Auth::user())->orderByDesc('id')->paginate(20);
 
-        return view('cabinet.adverts.index');
+        return view('cabinet.adverts.index', compact('adverts'));
     }
 
 }

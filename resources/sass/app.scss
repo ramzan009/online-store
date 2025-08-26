@@ -4,26 +4,45 @@
 
 .create-view-users-block {
     width: 1300px;
-    margin: 0 auto;
-    padding: 25px 20px 20px 20px;
+    margin: 15px auto;
+    padding: 0 20px 20px 20px;
+}
+
+.breadcrumb {
+    margin-left: 28px;
+}
+
+.search-main {
+    width: 1255px;
+    margin: -2px auto;
+    background-color: #e9eaed;
+}
+
+.breadcrumbs-style-one {
+    display: flex;
+    margin-left: 24px;
+    width: 1250px;
+    height: 65px;
+    line-height: 65px;
+    background-color: #ffffff;
 }
 
 .create-users-block {
-    width: 1300px;
+    width: 1250px;
     margin: 1% auto;
     background-color: #ffffff;
     padding: 25px 20px 20px 20px;
 }
 
 .about-users-block {
-    width: 1300px;
+    width: 1250px;
     margin: 1% auto;
     background-color: #ffffff;
     padding: 25px 20px 20px 20px;
 }
 
 .show-users-block {
-    width: 1300px;
+    width: 1250px;
     margin: 1% auto;
     background-color: #ffffff;
     padding: 25px 20px 20px 20px;
@@ -34,16 +53,19 @@
 }
 
 .block-admin {
-    width: 1300px;
+    width: 1250px;
     margin: 1% auto;
 }
 
 .create-for-style {
-    margin: 20px auto;
-    width: 1300px;
+    margin: 15px auto;
+    width: 1250px;
 }
 
-////
+.app-content {
+    flex: 1;
+}
+
 .table th, .table td {
     padding: 0.55rem 0.75rem;
 }

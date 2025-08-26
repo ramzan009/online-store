@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Adverts\AdvertController;
+use App\Http\Controllers\Adverts\FavoriteController;
 use App\Http\Controllers\Cabinet\Adverts\AdvertController as CabinetAdvertController;
 use App\Http\Controllers\Cabinet\Adverts\CreateController;
 use App\Http\Controllers\Cabinet\Adverts\ManageController;
@@ -36,16 +37,19 @@ Route::group(
     function () {
         Route::get('/show/{advert}', [AdvertController::class, 'show'])->name('show');
         Route::post('/show{advert}/phone', [AdvertController::class, 'phone'])->name('phone');
+        Route::post('/show/{advert}/favorites', [FavoriteController::class, 'add'])->name('favorites');
+        Route::delete('/show/{advert}/favorites', [FavoriteController::class, 'remove']);
 
-        Route::get('/all/{category?}', [AdvertController::class, 'index'])->name('index.all');
-        Route::get('/{region?}/{category?}', [AdvertController::class, 'index'])->name('index');
+//        Route::get('/all/{category?}', [AdvertController::class, 'index'])->name('index.all');
+//        Route::get('/{region?}/{category?}', [AdvertController::class, 'index'])->name('index');
+
+        Route::get('/{adverts_path?}', [AdvertController::class, 'index'])->name('index')->where('adverts_path', '.+');
     });
 
 Route::group(
     [
         'prefix' => 'cabinet',
         'as' => 'cabinet.',
-//        'namespace' => 'Cabinet',
         'middleware' => ['auth'],
     ],
     function () {
@@ -61,6 +65,9 @@ Route::group(
 
             Route::post('/phone/auth', [PhoneController::class, 'auth'])->name('phone.auth');
         });
+
+        Route::get('/favorites', [FavoriteController::class, 'add'])->name('favorites.index');
+        Route::delete('/favorites/{advert}', [FavoriteController::class, 'remove'])->name('favorites.remove');
 
         Route::group(
             [
@@ -94,9 +101,7 @@ Route::group(
     [
         'prefix' => 'admin',
         'as' => 'admin.',
-        'middleware' => ['auth',
-//            'can:admin-panel'
-        ],
+        'middleware' => ['auth', 'can:admin-panel'],
     ],
     function () {
         Route::get('/', [AdminHomeController::class, 'index'])->name('home');
@@ -111,6 +116,7 @@ Route::group(
                 Route::post('/up', [CategoryController::class, 'up'])->name('up');
                 Route::post('/down', [CategoryController::class, 'down'])->name('down');
                 Route::post('/last', [CategoryController::class, 'last'])->name('last');
+
                 Route::resource('attributes', AttributeController::class)->except('index');
             });
 

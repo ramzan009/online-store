@@ -1,17 +1,23 @@
 <?php
 
+use App\Http\Router\AdvertsPath;
 use App\Models\Adverts\Advert\Advert;
 use App\Models\Region;
 use App\Models\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator as Crumbs;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 
-Breadcrumbs::register('home', function (Crumbs $crumbs) {
-    $crumbs->push('Home', route('home'));
+Breadcrumbs::register('dashboard', function (Crumbs $crumbs) {
+    $crumbs->push('Home', route('dashboard'));
+});
+
+Breadcrumbs::register('profile.show', function (Crumbs $crumbs) {
+    $crumbs->parent('dashboard');
+    $crumbs->push('Profile', route('profile.show'));
 });
 
 Breadcrumbs::register('login', function (Crumbs $crumbs) {
-    $crumbs->parent('home');
+    $crumbs->parent('dashboard');
     $crumbs->push('Login', route('login'));
 });
 
@@ -26,13 +32,14 @@ Breadcrumbs::register('password.reset', function (Crumbs $crumbs) {
 });
 
 Breadcrumbs::register('cabinet', function (Crumbs $crumbs) {
-    $crumbs->parent('home');
+    $crumbs->parent('dashboard');
     $crumbs->push('Cabinet', route('cabinet'));
 });
 
 // Для Админки
+
 Breadcrumbs::register('admin.home', function (Crumbs $crumbs) {
-    $crumbs->parent('home');
+    $crumbs->parent('dashboard');
     $crumbs->push('Admin', route('admin.home'));
 });
 
@@ -56,8 +63,8 @@ Breadcrumbs::register('admin.users.edit', function (Crumbs $crumbs, User $user) 
     $crumbs->push('Edit', route('admin.users.edit', $user));
 });
 
-
 // Для региона
+
 Breadcrumbs::register('admin.regions.index', function (Crumbs $crumbs) {
     $crumbs->parent('admin.home');
     $crumbs->push('Regions', route('admin.regions.index'));
@@ -83,7 +90,25 @@ Breadcrumbs::register('admin.regions.edit', function (Crumbs $crumbs, Region $re
 });
 
 
-// Для категории
+// Adverts Admin
+
+Breadcrumbs::register('admin.adverts.adverts.index', function (Crumbs $crumbs) {
+    $crumbs->parent('admin.home');
+    $crumbs->push('Adverts', route('admin.adverts.adverts.index'));
+});
+
+Breadcrumbs::register('admin.adverts.adverts.edit', function (Crumbs $crumbs, Advert $advert) {
+    $crumbs->parent('admin.home');
+    $crumbs->push($advert->title, route('admin.adverts.adverts.edit', $advert));
+});
+
+Breadcrumbs::register('admin.adverts.adverts.reject', function (Crumbs $crumbs, Advert $advert) {
+    $crumbs->parent('admin.home');
+    $crumbs->push($advert->title, route('admin.adverts.adverts.reject', $advert));
+});
+
+
+// Advert Categories Admin
 Breadcrumbs::register('admin.adverts.categories.index', function (Crumbs $crumbs) {
     $crumbs->parent('admin.home');
     $crumbs->push('Categories', route('admin.adverts.categories.index'));
@@ -94,7 +119,7 @@ Breadcrumbs::register('admin.adverts.categories.create', function (Crumbs $crumb
     $crumbs->push('Create', route('admin.adverts.categories.create'));
 });
 
-Breadcrumbs::register('admin.adverts.categories.show', function (Crumbs $crumbs, Category $category) {
+Breadcrumbs::register('admin.adverts.categories.show', function (Crumbs $crumbs, \App\Models\Adverts\Category $category) {
     if ($parent = $category->parent) {
         $crumbs->parent('admin.adverts.categories.show', $parent);
     } else {
@@ -103,19 +128,19 @@ Breadcrumbs::register('admin.adverts.categories.show', function (Crumbs $crumbs,
     $crumbs->push($category->name, route('admin.regions.show', $category));
 });
 
-Breadcrumbs::register('admin.adverts.categories.edit', function (Crumbs $crumbs, Category $category) {
+Breadcrumbs::register('admin.adverts.categories.edit', function (Crumbs $crumbs, \App\Models\Adverts\Category $category) {
     $crumbs->parent('admin.adverts.categories.show', $category);
     $crumbs->push('Edit', route('admin.adverts.categories.edit', $category));
 });
 
 
-// Для атрибутов
-Breadcrumbs::register('admin.adverts.categories.attributes.index', function (Crumbs $crumbs, Category $category) {
-    $crumbs->parent('admin.adverts.categories.attributes.show', $category);
+// Advert Categories Attributes Admin
+Breadcrumbs::register('admin.adverts.categories.attributes.create', function (Crumbs $crumbs, \App\Models\Adverts\Category $category) {
+    $crumbs->parent('admin.adverts.categories.show', $category);
     $crumbs->push('Create', route('admin.adverts.categories.attributes.create', $category));
 });
 
-Breadcrumbs::register('admin.adverts.categories.attributes.show', function (Crumbs $crumbs, Category $category, Attribute $attribute) {
+Breadcrumbs::register('admin.adverts.categories.attributes.show', function (Crumbs $crumbs, Category $category, \App\Models\Adverts\Attribute $attribute) {
     $crumbs->parent('admin.adverts.categories.show', $category);
     $crumbs->push($attribute->name, route('admin.adverts.categories.attributes.show', [$category, $attribute]));
 });
@@ -125,44 +150,44 @@ Breadcrumbs::register('admin.adverts.categories.attributes.edit', function (Crum
     $crumbs->push('Edit', route('admin.adverts.categories.attributes.edit', [$category, $attribute]));
 });
 
-
 // Adverts
-Breadcrumbs::register('adverts.inner_region', function (Crumbs $crumbs, Region $region = null, Category $category = null) {
-    if ($region && $parent = $region->parent) {
-        $crumbs->parent('adverts.inner_region', $parent, $category);
+Breadcrumbs::register('adverts.inner_region', function (Crumbs $crumbs, AdvertsPath $path) {
+    if ($path->region && $parent = $path->region->parent) {
+        $crumbs->parent('adverts.inner_region', $path->withRegion($parent));
     } else {
-        $crumbs->parent('home');
+        $crumbs->parent('dashboard');
         $crumbs->push('Adverts', route('adverts.index'));
     }
-    if ($region) {
-        $crumbs->push($region->name, route('adverts.index', $region));
+    if ($path->region) {
+        $crumbs->push($path->region->name, route('adverts.index', $path));
     }
 });
 
-Breadcrumbs::register('adverts.inner_category', function (Crumbs $crumbs, Region $region, Category $category = null) {
-    if ($category && $parent = $category->parent) {
-        $crumbs->parent('adverts.inner_category', $region, $parent);
+Breadcrumbs::register('adverts.inner_category', function (Crumbs $crumbs, AdvertsPath $path, AdvertsPath $orig) {
+    if ($path->category && $parent = $path->category->parent) {
+        $crumbs->parent('adverts.inner_category', $path->withCategory($parent), $orig);
     } else {
-        $crumbs->parent('adverts.inner_region', $region, $parent);
+        $crumbs->parent('adverts.inner_region', $orig);
     }
-    if ($category) {
-        $crumbs->push($category->name, route('adverts.index', $region, $category));
+    if ($path->category) {
+        $crumbs->push($path->category->name, route('adverts.index', $path));
     }
 });
 
-Breadcrumbs::register('adverts.index', function (Crumbs $crumbs, Region $region = null, Category $category = null) {
-    $crumbs->parent('adverts.inner_category', $region, $category);
+Breadcrumbs::register('adverts.index', function (Crumbs $crumbs, AdvertsPath $path = null) {
+    $path = $path ?: adverts_path(null, null);
+    $crumbs->parent('adverts.inner_category', $path, $path);
 });
 
 Breadcrumbs::register('adverts.show', function (Crumbs $crumbs, Advert $advert) {
-    $crumbs->parent('adverts.index', $advert->region, $advert->category);
-    $crumbs->push($advert, route('adverts.show', $advert));
+    $crumbs->parent('adverts.index', adverts_path($advert->region, $advert->category));
+    $crumbs->push($advert->title, route('adverts.show', $advert));
 });
 
 
 // Cabinet
 Breadcrumbs::register('cabinet.home', function (Crumbs $crumbs) {
-    $crumbs->parent('home');
+    $crumbs->parent('dashboard');
     $crumbs->push('Cabinet', route('cabinet.home'));
 });
 
@@ -174,6 +199,11 @@ Breadcrumbs::register('cabinet.profile.home', function (Crumbs $crumbs) {
 Breadcrumbs::register('cabinet.profile.edit', function (Crumbs $crumbs) {
     $crumbs->parent('cabinet.profile.home');
     $crumbs->push('Edit', route('cabinet.profile.edit'));
+});
+
+Breadcrumbs::register('cabinet.profile.phone', function (Crumbs $crumbs) {
+    $crumbs->parent('cabinet.profile.home');
+    $crumbs->push('Phone', route('cabinet.profile.phone'));
 });
 
 
@@ -193,7 +223,7 @@ Breadcrumbs::register('cabinet.adverts.create.region', function (Crumbs $crumbs,
     $crumbs->push($category->name, route('cabinet.adverts.create.region', [$category, $region]));
 });
 
-Breadcrumbs::register('cabinet.adverts.create.advert', function (Crumbs $crumbs, \App\Models\Adverts\Category $category, Region $region = null) {
+Breadcrumbs::register('cabinet.adverts.create.advert', function (Crumbs $crumbs, Category $category, Region $region = null) {
     $crumbs->parent('cabinet.adverts.create.region', $category, $region);
     $crumbs->push($region ? $region->name : 'All', route('cabinet.adverts.create.advert', [$category, $region]));
 });

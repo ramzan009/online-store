@@ -22,6 +22,14 @@ class Region extends Model
     /**
      * @return string
      */
+    public function getPath(): string
+    {
+        return ($this->parent ? $this->parent->getPath() . '/' : '') . $this->slug;
+    }
+
+    /**
+     * @return string
+     */
     public function getAddress(): string
     {
         return ($this->parent ? $this->parent->getAddress() . ', ' : '') . $this->name;
