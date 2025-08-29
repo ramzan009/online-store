@@ -27,17 +27,14 @@
     @livewire('navigation-menu')
 
     <!-- Page Heading -->
-    @if (isset($header))
-        <header class="bg-white shadow">
+{{--    @if (isset($header))--}}
+{{--        <header class="bg-white shadow">--}}
 {{--            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">--}}
 {{--                {{ $header }}--}}
 
 {{--            </div>--}}
-            @section('search')
-                @include('layouts.partials.search', ['category' => null, 'action' => route('adverts.index')])
-            @endsection
-        </header>
-    @endif
+{{--        </header>--}}
+{{--    @endif--}}
 
     <!-- Page Content -->
     <main class="app-content py-3">

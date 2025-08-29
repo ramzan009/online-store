@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Carbon\Laravel\ServiceProvider;
-use Elastic\Elasticsearch\Client;
-use Elastic\Elasticsearch\ClientBuilder;
+use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 use Illuminate\Contracts\Foundation\Application;
 
 class SearchServiceProvider extends ServiceProvider
