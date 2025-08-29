@@ -5,9 +5,7 @@
         </h2>
     </x-slot>
 
-    @section('search')
-        @include('layouts.partials.search', ['category' => $category, 'action' => '?'])
-    @endsection
+        @include('layouts.partials.search')
 
     @section('breadcrumbs')
     @endsection

@@ -43,5 +43,5 @@
                 </tbody>
             </table>
     </div>
-    {{--    {{ $adverts->links() }}--}}
+        {{ $adverts->links() }}
 </x-app-layout>

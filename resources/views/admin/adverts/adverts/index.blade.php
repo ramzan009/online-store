@@ -91,13 +91,13 @@
                     <td>{{ $advert->category->id }} - {{ $advert->category->name }}</td>
                     <td>
                         @if ($advert->isDraft())
-                            <span class="badge badge-secondary">Draft</span>
+                            <span style="color: #1a1d20" class="badge badge-secondary">Draft</span>
                         @elseif ($advert->isOnModeration())
-                            <span class="badge badge-primary">Moderation</span>
+                            <span style="color: #1a1d20" class="badge badge-primary">Moderation</span>
                         @elseif ($advert->isActive())
-                            <span class="badge badge-primary">Active</span>
+                            <span style="color: #1a1d20" class="badge badge-primary">Active</span>
                         @elseif ($advert->isClosed())
-                            <span class="badge badge-secondary">Closed</span>
+                            <span style="color: #1a1d20" class="badge badge-secondary">Closed</span>
                         @endif
                     </td>
                 </tr>

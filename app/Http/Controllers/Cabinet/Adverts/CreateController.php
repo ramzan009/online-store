@@ -6,10 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Cabinet\Adverts\CreateRequest;
 use App\Models\Adverts\Category;
 use App\Models\Region;
+use App\UseCases\Adverts\AdvertService;
 use Illuminate\Support\Facades\Auth;
 
 class CreateController extends Controller
 {
+
+    private AdvertService $service;
+
+    public function __construct(AdvertService $service)
+    {
+        $this->service = $service;
+    }
+
     public function category()
     {
         $categories = Category::defaultOrder()->withDepth()->get()->toTree();
@@ -41,6 +50,6 @@ class CreateController extends Controller
         } catch (\DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
-        return redirect()->route('adverts.show', ['advert' => $advert]);
+        return redirect()->route('adverts.show',$advert);
     }
 }

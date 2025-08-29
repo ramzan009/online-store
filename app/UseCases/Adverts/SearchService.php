@@ -6,34 +6,32 @@ use App\Http\Requests\Adverts\SearchRequest;
 use App\Models\Adverts\Advert\Advert;
 use App\Models\Adverts\Category;
 use App\Models\Region;
-use Elastic\Elasticsearch\Client;
+use Elasticsearch\Client;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class SearchService
 {
-    private $client;
+    private Client $client;
 
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
-    public function search(?Category $category, ?Region $region, SearchRequest $request, int $perPage, int $page): SearchResult
+    public function search(?Category $category, ?Region $region, SearchRequest $request, int $perPage, $page): SearchResult
     {
         $values = array_filter((array)$request->input('attrs'), function ($value) {
             return !empty($value['equals']) || !empty($value['from']) || !empty($value['to']);
         });
 
         $response = $this->client->search([
-            'index' => 'app',
-            'type' => 'adverts',
+            'index' => 'adverts',
             'body' => [
                 '_source' => ['id'],
                 'from' => ($page - 1) * $perPage,
                 'size' => $perPage,
-                'sort' => !empty($request['text']) ? [
+                'sort' => empty($request['text']) ? [
                     ['published_at' => ['order' => 'desc']],
                 ] : [],
                 'aggs' => [
@@ -57,9 +55,9 @@ class SearchService
                             array_filter([
                                 $category ? ['term' => ['categories' => $category->id]] : false,
                                 $region ? ['term' => ['regions' => $region->id]] : false,
-                                !empty($request->text) ? ['multi_match' => [
-                                    'query' => $request->text,
-                                    'fields' => ['title^3', 'content'],
+                                !empty($request['text']) ? ['multi_match' => [
+                                    'query' => $request['text'],
+                                    'fields' => [ 'title^3', 'content' ]
                                 ]] : false,
                             ]),
                             array_map(function ($value, $id) {
@@ -80,8 +78,8 @@ class SearchService
                                 ];
                             }, $values, array_keys($values))
                         )
-                    ]
-                ]
+                    ],
+                ],
             ],
         ]);
 

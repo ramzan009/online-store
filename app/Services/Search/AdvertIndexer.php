@@ -3,7 +3,7 @@
 namespace App\Services\Search;
 
 use App\Models\Adverts\Advert\Advert;
-use Elastic\Elasticsearch\Client;
+use Elasticsearch\Client;
 
 class AdvertIndexer
 {
@@ -17,7 +17,7 @@ class AdvertIndexer
     public function clear(): void
     {
         $this->client->deleteByQuery([
-            'index' => 'app',
+            'index' => 'adverts',
             'type' => 'adverts',
             'body' => [
                 'query' => [
@@ -37,7 +37,7 @@ class AdvertIndexer
         }
 
         $this->client->index([
-            'index' => 'app',
+            'index' => 'adverts',
             'type' => 'adverts',
             'id' => $advert->id,
             'body' => [
