@@ -4,10 +4,18 @@ namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Cabinet\Profile\ProfileUpdateRequest;
+use App\UseCases\Profile\ProfileService;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    private ProfileService $service;
+
+    public function __construct(ProfileService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -24,19 +32,11 @@ class ProfileController extends Controller
 
     public function update(ProfileUpdateRequest $request)
     {
-        $data = $request->validated();
-        $user = Auth::user();
-
-        $oldPhone = $user->phone;
-        $user->update([
-            'name' => $data['name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'],
-        ]);
-        if ($user->phone !== $oldPhone) {
-            $user->unverifyPhone();
+        try {
+            $this->service->edit(Auth::id(), $request);
+        } catch (\DomainException $e) {
+            return back()->with('error', $e->getMessage());
         }
-
         return redirect()->route('cabinet.profile.home');
     }
 }

@@ -11,7 +11,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
-                                <button class="btn btn-light border" type="submit"><span class="fa fa-search"></span>Search</button>
+                                <button class="btn btn-light border" type="submit"><span class="fa fa-search"></span></button>
                             </div>
                         </div>
                     </div>

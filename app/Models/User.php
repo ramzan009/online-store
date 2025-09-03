@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Models\Adverts\Advert\Advert;
+use App\Models\User\NetWork;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -13,8 +16,6 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Random\RandomException;
-use function Symfony\Component\String\s;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -105,7 +106,24 @@ class User extends Authenticatable implements MustVerifyEmail
         ]);
     }
 
-    public static function new( $name, $email): self
+    public static function registerByNetwork(string $network, string $identity): self
+    {
+        $user = static::create([
+            'name' => $identity,
+            'email' => null,
+            'password' => null,
+            'verify_token' => null,
+            'status' => self::STATUS_ACTIVE,
+            'role' => self::ROLE_USER,
+        ]);
+        $user->networks()->create([
+            'network' => $network,
+            'identity' => $identity,
+        ]);
+        return $user;
+    }
+
+    public static function new($name, $email): self
     {
         return static::create([
             'name' => $name,
@@ -124,6 +142,7 @@ class User extends Authenticatable implements MustVerifyEmail
             self::ROLE_MODERATOR => 'Moderator',
         ];
     }
+
     /**
      * @return bool
      */
@@ -162,7 +181,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isModerator(): bool
     {
-        return  $this->role === self::ROLE_MODERATOR;
+        return $this->role === self::ROLE_MODERATOR;
     }
 
     public function isUser(): bool
@@ -263,5 +282,17 @@ class User extends Authenticatable implements MustVerifyEmail
     public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(Advert::class, 'advert_favorites', 'user_id', 'advert_id');
+    }
+
+    public function networks(): HasMany
+    {
+        return $this->hasMany(Network::class, 'user_id', 'id');
+    }
+
+    public function scopeByNetwork(Builder $query, string $network, string $identity): Builder
+    {
+        return $query->whereHas('networks', function ($query) use ($network, $identity) {
+            $query->where('network', $network)->where('identity', $identity);
+        });
     }
 }
