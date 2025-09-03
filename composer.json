@@ -8,15 +8,18 @@
     "require": {
         "php": "^8.2",
         "davejamesmiller/laravel-breadcrumbs": "^5.3",
+        "doctrine/dbal": "^4.3",
         "elasticsearch/elasticsearch": "^6.0",
         "guzzlehttp/guzzle": "^7.9",
         "kalnoy/nestedset": "^6.0",
         "laravel/framework": "^12.0",
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
+        "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.0",
-        "predis/predis": "^3.2"
+        "predis/predis": "^3.2",
+        "socialiteproviders/twitter": "^4.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Adverts\AdvertController;
 use App\Http\Controllers\Adverts\FavoriteController;
+use App\Http\Controllers\Auth\NetworkController;
 use App\Http\Controllers\Cabinet\Adverts\AdvertController as CabinetAdvertController;
 use App\Http\Controllers\Cabinet\Adverts\CreateController;
 use App\Http\Controllers\Cabinet\Adverts\ManageController;
@@ -18,12 +19,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Middleware\FilledProfile;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('dashboard');
-Route::redirect('/dashboard', '/');
-
-Route::get('/banner/get', [\App\Http\Controllers\BannerController::class, 'get'])->name('banner.get');
-Route::get('/banner/{banner}/click', [\App\Http\Controllers\BannerController::class, 'click'])->name('banner.click');
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -31,6 +26,15 @@ Route::middleware([
 ])->group(function () {
 
 });
+
+Route::get('/', [HomeController::class, 'index'])->name('dashboard');
+Route::redirect('/dashboard', '/');
+
+Route::get('/login/{network}', [NetworkController::class, 'redirect'])->name('login.network');
+Route::get('/login/{network}/callback', [NetworkController::class, 'callback']);
+
+Route::get('/banner/get', [\App\Http\Controllers\BannerController::class, 'get'])->name('banner.get');
+Route::get('/banner/{banner}/click', [\App\Http\Controllers\BannerController::class, 'click'])->name('banner.click');
 
 Route::group(
     [
@@ -42,9 +46,6 @@ Route::group(
         Route::post('/show{advert}/phone', [AdvertController::class, 'phone'])->name('phone');
         Route::post('/show/{advert}/favorites', [FavoriteController::class, 'add'])->name('favorites');
         Route::delete('/show/{advert}/favorites', [FavoriteController::class, 'remove']);
-
-//        Route::get('/all/{category?}', [AdvertController::class, 'index'])->name('index.all');
-//        Route::get('/{region?}/{category?}', [AdvertController::class, 'index'])->name('index');
 
         Route::get('/{adverts_path?}', [AdvertController::class, 'index'])->name('index')->where('adverts_path', '.+');
     });

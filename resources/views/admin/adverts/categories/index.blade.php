@@ -23,19 +23,19 @@
                         <div class="d-flex flex-row">
                             <form method="POST" action="{{ route('admin.adverts.categories.first', $category) }}" class="mr-1">
                                 @csrf
-                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-double-up"></span>First</button>
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-double-up"></span></button>
                             </form>
                             <form method="POST" action="{{ route('admin.adverts.categories.up', $category) }}" class="mr-1">
                                 @csrf
-                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-up"></span>Up</button>
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-up"></span></button>
                             </form>
                             <form method="POST" action="{{ route('admin.adverts.categories.down', $category) }}" class="mr-1">
                                 @csrf
-                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-down"></span>Down</button>
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-down"></span></button>
                             </form>
                             <form method="POST" action="{{ route('admin.adverts.categories.last', $category) }}" class="mr-1">
                                 @csrf
-                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-double-down"></span>Last</button>
+                                <button class="btn btn-sm btn-outline-primary"><span class="fa fa-angle-double-down"></span></button>
                             </form>
                         </div>
                     </td>

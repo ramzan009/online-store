@@ -11,8 +11,6 @@ use App\Models\Adverts\Advert\Advert;
 use App\Models\Adverts\Category;
 use App\Models\Region;
 use App\Models\User;
-use App\Services\Search\AdvertIndexer;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 

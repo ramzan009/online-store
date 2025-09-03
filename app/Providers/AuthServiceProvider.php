@@ -14,7 +14,11 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->registerPermissions();
+    }
 
+    private function registerPermissions(): void
+    {
         Gate::define('admin-panel', function (User $user) {
             return $user->isAdmin() || $user->isModerator();
         });
@@ -52,7 +56,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('manage-own-advert', function (User $user, Advert $advert) {
-           return $advert->user_id === $user->id;
+            return $advert->user_id === $user->id;
         });
     }
 }
