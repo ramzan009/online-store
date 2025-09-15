@@ -14,12 +14,12 @@ class ReindexCommand extends Command
     private AdvertIndexer $indexer;
     private $banners;
 
-    public function __construct(AdvertIndexer $indexer, BannerIndexer $banners)
-    {
-        parent::__construct();
-        $this->indexer = $indexer;
-        $this->banners = $banners;
-    }
+//    public function __construct(AdvertIndexer $indexer, BannerIndexer $banners)
+//    {
+//        parent::__construct();
+//        $this->indexer = $indexer;
+//        $this->banners = $banners;
+//    }
 
     public function handle(): bool
     {

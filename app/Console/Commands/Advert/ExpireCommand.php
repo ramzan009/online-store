@@ -12,6 +12,7 @@ class ExpireCommand extends Command
     protected $signature = 'advert:expire';
 
     protected $description = 'Expire advert';
+    private AdvertService $service;
 
     public function __construct(AdvertService $service)
     {
