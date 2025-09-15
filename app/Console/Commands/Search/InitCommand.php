@@ -13,13 +13,13 @@ use Illuminate\Support\Carbon;
 class InitCommand extends Command
 {
     protected $signature = 'search:init';
-    private Client $client;
+//    private Client $client;
 
-    public function __construct(Client $client)
-    {
-        parent::__construct();
-        $this->client = $client;
-    }
+//    public function __construct(Client $client)
+//    {
+//        parent::__construct();
+//        $this->client = $client;
+//    }
 
     public function handle(): bool
     {

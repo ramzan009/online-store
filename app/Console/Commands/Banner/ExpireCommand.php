@@ -11,13 +11,13 @@ class ExpireCommand extends Command
 {
     protected $signature = 'banner:expire';
 
-    private $client;
+//    private $client;
 
-    public function __construct(Client $client)
-    {
-        parent::__construct();
-        $this->client = $client;
-    }
+//    public function __construct(Client $client)
+//    {
+//        parent::__construct();
+//        $this->client = $client;
+//    }
 
     public function handle(): bool
     {
